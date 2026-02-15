@@ -19,7 +19,7 @@ export default auth((req) => {
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
   const isAdminRoute = nextUrl.pathname.startsWith(adminRoutesPrefix);
-  const isPelaporRoute = nextUrl.pathname.startsWith(pelaporRoutesPrefix);
+  const isPelaporRoute = pelaporRoutesPrefix.some(prefix => nextUrl.pathname.startsWith(prefix));
 
   if (isApiAuthRoute) return;
 

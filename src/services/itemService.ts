@@ -31,3 +31,13 @@ export async function getItems() {
 
   return JSON.parse(JSON.stringify(items));
 }
+
+export async function getReportsByUserId(userId: string) {
+  await connectDB();
+  
+  const items = await ItemModel.find({ reporter: new Types.ObjectId(userId) })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return JSON.parse(JSON.stringify(items));
+}

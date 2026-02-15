@@ -94,7 +94,7 @@ export function ItemCard({ item, currentUser }: ItemCardProps) {
           />
         ) : item.type === "LOST" ? (
           <Link
-            href={`/items/${item._id}`}
+            href={`/my-reports`}
             className={cn(
               buttonVariants({ variant: "outline", size: "sm" }),
               "w-full font-bold h-9 transition-all border-slate-200 hover:bg-slate-50 hover:text-red-600"
