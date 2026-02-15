@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,10 +22,16 @@ interface FoundReportFormProps {
 }
 
 export function FoundReportForm({ type }: FoundReportFormProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [state, formAction, isPending] = useActionState(submitReport, undefined);
   const [preview, setPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (state?.error) {
+      toast.error(state.error);
+    }
+  }, [state]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -53,23 +59,6 @@ export function FoundReportForm({ type }: FoundReportFormProps) {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsSubmitting(true);
-
-    const formData = new FormData(event.currentTarget);
-    formData.append("type", type);
-
-    const result = await submitReport(formData);
-
-    if (result?.error) {
-      toast.error(result.error);
-      setIsSubmitting(false);
-    } else {
-      toast.success("Report submitted successfully!");
-    }
-  }
-
   return (
     <Card className={`w-full max-w-2xl mx-auto shadow-lg border-t-4 ${type === 'FOUND' ? 'border-t-red-600' : 'border-t-blue-600'}`}>
       <CardHeader className="text-center space-y-1">
@@ -83,7 +72,9 @@ export function FoundReportForm({ type }: FoundReportFormProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form action={formAction} className="space-y-6">
+          <input type="hidden" name="type" value={type} />
+          
           <input
             type="file"
             id="image-upload"
@@ -179,9 +170,9 @@ export function FoundReportForm({ type }: FoundReportFormProps) {
           <Button 
             type="submit" 
             className={`w-full ${type === 'FOUND' ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'} text-white shadow-md transition-all`} 
-            disabled={isSubmitting}
+            disabled={isPending}
           >
-            {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</> : `Submit ${type === 'FOUND' ? 'Found' : 'Lost'} Report`}
+            {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</> : `Submit ${type === 'FOUND' ? 'Found' : 'Lost'} Report`}
           </Button>
         </form>
       </CardContent>

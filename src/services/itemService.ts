@@ -15,7 +15,7 @@ export async function createItem(data: ItemInput, reporterId: string, imageUrls:
     ...validation.data,
     reporter: new Types.ObjectId(reporterId),
     images: imageUrls,
-    status: validation.data.type === "FOUND" ? "PUBLISHED" : "PENDING"
+    status: "PUBLISHED"
   });
 
   return JSON.parse(JSON.stringify(newItem)); 

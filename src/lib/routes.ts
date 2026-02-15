@@ -11,7 +11,7 @@ export const authRoutes = [
 
 export const adminRoutesPrefix = "/dashboard"; 
 
-export const pelaporRoutesPrefix = "/report";
+export const pelaporRoutesPrefix = "/claim";
 
 export const apiAuthPrefix = "/api/auth";
 

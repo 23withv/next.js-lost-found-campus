@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,10 +18,16 @@ import { submitReport } from "@/actions/items";
 import { Loader2, UploadCloud, X, FileImage } from "lucide-react";
 
 export function LostReportForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [state, formAction, isPending] = useActionState(submitReport, undefined);
   const [preview, setPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (state?.error) {
+      toast.error(state.error);
+    }
+  }, [state]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -49,23 +55,6 @@ export function LostReportForm() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsSubmitting(true);
-
-    const formData = new FormData(event.currentTarget);
-    formData.append("type", "LOST");
-
-    const result = await submitReport(formData);
-
-    if (result?.error) {
-      toast.error(result.error);
-      setIsSubmitting(false);
-    } else {
-      toast.success("Lost report submitted successfully!");
-    }
-  }
-
   return (
     <Card className="w-full max-w-2xl mx-auto shadow-lg border-t-4 border-t-blue-600">
       <CardHeader className="text-center space-y-1">
@@ -77,7 +66,9 @@ export function LostReportForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form action={formAction} className="space-y-6">
+          <input type="hidden" name="type" value="LOST" />
+          
           <input
             type="file"
             id="image-upload"
@@ -203,9 +194,9 @@ export function LostReportForm() {
           <Button 
             type="submit" 
             className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20" 
-            disabled={isSubmitting}
+            disabled={isPending}
           >
-            {isSubmitting ? (
+            {isPending ? (
               <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</>
             ) : (
               "Submit Lost Report"

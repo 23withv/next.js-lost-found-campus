@@ -1,4 +1,4 @@
-import NextAuth, { User } from "next-auth";
+import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
 import connectDB from "@/lib/db";
 import UserModel from "@/models/User";
@@ -23,34 +23,38 @@ export const {
         if (!user || !user.password) return null;
 
         const passwordMatch = await bcrypt.compare(
-          credentials.password as string, 
+          credentials.password as string,
           user.password
         );
 
         if (passwordMatch) {
           return {
-             id: user._id.toString(),
-             name: user.name,
-             email: user.email,
-             role: user.role as UserRole ,
-             image: user.image
+            id: user._id.toString(),
+            name: user.name,
+            email: user.email,
+            role: user.role as UserRole,
+            image: user.image,
           };
         }
         return null;
       }
-    })
+    }),
   ],
-callbacks: {
+  callbacks: {
     ...authConfig.callbacks,
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role; 
+        token.role = user.role;
+        if (user.id) token.sub = user.id;
       }
       return token;
     },
     async session({ session, token }) {
-      if (token.role && session.user) {
-        session.user.role = token.role as UserRole; 
+      if (session.user) {
+        session.user.id = token.sub as string;
+        if (token.role) {
+          session.user.role = token.role as UserRole;
+        }
       }
       return session;
     },
@@ -58,7 +62,7 @@ callbacks: {
       if (account?.provider === "google") {
         await connectDB();
         const existingUser = await UserModel.findOne({ email: user.email });
-        
+
         if (!existingUser) {
           const newUser = await UserModel.create({
             name: user.name,
@@ -67,8 +71,10 @@ callbacks: {
             role: "PELAPOR",
           });
           user.role = newUser.role;
+          user.id = newUser._id.toString();
         } else {
           user.role = existingUser.role;
+          user.id = existingUser._id.toString();
         }
       }
       return true;

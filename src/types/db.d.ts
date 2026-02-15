@@ -27,6 +27,7 @@ export interface IClaim extends Document {
   claimer: Types.ObjectId;
   status: ClaimStatus;
   proofDescription: string;
+  alternateContact?: string | null;
   adminFeedback?: string;
   resolvedAt?: Date;
   createdAt: Date;

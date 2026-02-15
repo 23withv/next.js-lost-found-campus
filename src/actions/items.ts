@@ -7,7 +7,7 @@ import { itemSchema } from "@/lib/validators/item";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function submitReport(formData: FormData) {
+export async function submitReport(prevState: any, formData: FormData) {
   const session = await auth();
   
   if (!session?.user?.id) {

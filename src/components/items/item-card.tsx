@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { ClaimButton } from "./claim-button";
 
 interface ItemCardProps {
   item: any;
@@ -17,6 +18,8 @@ interface ItemCardProps {
 export function ItemCard({ item, currentUser }: ItemCardProps) {
   const imageUrl = item.images?.[0] || "";
   const isAdmin = currentUser?.role === "ADMIN";
+  const isPelapor = currentUser?.role === "PELAPOR";
+  const isAuthenticated = !!currentUser;
 
   return (
     <Card className="group relative flex flex-col overflow-hidden border-border/50 bg-background transition-all hover:shadow-lg hover:border-border">
@@ -83,23 +86,23 @@ export function ItemCard({ item, currentUser }: ItemCardProps) {
           >
             Manage Item
           </Link>
-        ) : (
+        ) : item.type === "FOUND" && isPelapor ? (
+          <ClaimButton 
+            itemId={item._id} 
+            isAuthenticated={isAuthenticated} 
+            userRole={currentUser?.role} 
+          />
+        ) : item.type === "LOST" ? (
           <Link
             href={`/items/${item._id}`}
             className={cn(
-              buttonVariants({ 
-                variant: item.type === "LOST" ? "outline" : "default",
-                size: "sm" 
-              }),
-              "w-full font-bold h-9 transition-all", 
-              item.type === "LOST" 
-                ? "border-slate-200 hover:bg-slate-50 hover:text-red-600" 
-                : "bg-slate-900 text-white hover:bg-slate-800"
+              buttonVariants({ variant: "outline", size: "sm" }),
+              "w-full font-bold h-9 transition-all border-slate-200 hover:bg-slate-50 hover:text-red-600"
             )}
           >
-            {item.type === "LOST" ? "I Found This" : "Claim Item"}
+            I Found This
           </Link>
-        )}
+        ) : null}
       </CardFooter>
     </Card>
   );

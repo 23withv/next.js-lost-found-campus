@@ -23,6 +23,10 @@ const ClaimSchema = new Schema<IClaim>(
       required: [true, "Proof description is required"],
       minlength: [20, "Proof description must be at least 20 characters"]
     },
+    alternateContact: { 
+      type: String, 
+      default: null 
+    },
     adminFeedback: { 
       type: String, 
       default: "" 
