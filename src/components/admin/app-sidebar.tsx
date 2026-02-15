@@ -12,31 +12,25 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
 } from "@/components/ui/sidebar"
-import { 
-  LayoutDashboard, 
-  Users, 
-  Package, 
-  LogOut, 
-  Settings 
-} from "lucide-react"
+import { LayoutDashboard, Users, Package, LogOut } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { LogoutButton } from "@/components/auth/logout-button"
 
 const items = [
   {
-    title: "Dashboard",
-    url: "/admin/dashboard",
+    title: "Overview",
+    url: "/dashboard",
     icon: LayoutDashboard,
   },
   {
     title: "Manage Items",
-    url: "/admin/items",
+    url: "/dashboard/items",
     icon: Package,
   },
   {
     title: "Manage Users",
-    url: "/admin/users",
+    url: "/dashboard/users",
     icon: Users,
   },
 ]
@@ -50,11 +44,11 @@ export function AppSidebar() {
         <Link 
           href="/"
           className="text-xl font-black tracking-tighter text-red-600"
-        >
+          >
           CAMPUS L&F ADMIN
-        </Link> 
+        </Link>
       </SidebarHeader>
-      
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
@@ -62,8 +56,8 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton 
-                    asChild 
+                  <SidebarMenuButton
+                    asChild
                     isActive={pathname === item.url}
                     tooltip={item.title}
                   >
@@ -83,10 +77,10 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <LogoutButton>
-               <SidebarMenuButton className="w-full text-red-600 hover:text-red-700 hover:bg-red-50">
-                  <LogOut />
-                  <span>Sign Out</span>
-               </SidebarMenuButton>
+              <SidebarMenuButton className="w-full text-red-600 hover:text-red-700 hover:bg-red-50">
+                <LogOut />
+                <span>Sign Out</span>
+              </SidebarMenuButton>
             </LogoutButton>
           </SidebarMenuItem>
         </SidebarMenu>

@@ -1,5 +1,6 @@
 export const publicRoutes = [
   "/",
+  "/items",
 ];
 
 export const authRoutes = [
@@ -8,19 +9,9 @@ export const authRoutes = [
   "/error",
 ];
 
-/**
- * Rute yang hanya bisa diakses oleh ADMIN
- */
-export const adminRoutes = [
-  "/admin",
-];
+export const adminRoutesPrefix = "/dashboard"; 
 
-/**
- * Rute yang hanya bisa diakses oleh PELAPOR
- */
-export const pelaporRoutes = [
-  "/report",
-];
+export const pelaporRoutesPrefix = "/report";
 
 export const apiAuthPrefix = "/api/auth";
 

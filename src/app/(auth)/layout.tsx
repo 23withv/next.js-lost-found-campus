@@ -19,7 +19,7 @@ export default function AuthLayout({ children }: { children: ReactNode } ) {
                     className="flex items-center gap-2 self-center font-bold text-2xl tracking-tight"
                     href="/"
                 >
-                    Lost & Report Campuss
+                    CAMPUS L&F
                 </Link>
                 {children}
             </div>

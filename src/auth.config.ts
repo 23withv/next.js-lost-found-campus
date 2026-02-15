@@ -16,17 +16,15 @@ export default {
     Credentials({
       async authorize(credentials) {
         const validatedFields = loginSchema.safeParse(credentials);
-
         if (validatedFields.success) {
-          const { email, password } = validatedFields.data;
 
+          const { email, password } = validatedFields.data;
           await connectDB();
           const user = await UserModel.findOne({ email });
 
           if (!user || !user.password) return null;
 
           const passwordsMatch = await bcrypt.compare(password, user.password);
-
           if (passwordsMatch) {
             return {
               id: user._id.toString(), 

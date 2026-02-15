@@ -11,16 +11,22 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
+        pathname: "/**",
       },
       {
         protocol: "https",
-        hostname: "lh3.googleuserconent.com"
+        hostname: "lh3.googleusercontent.com", 
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "placehold.co",
+        pathname: "/**",
       },
     ],
+    qualities: [75, 90],
+    minimumCacheTTL: 60,
+    formats: ['image/webp'],
   },
 };
 

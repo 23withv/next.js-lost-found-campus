@@ -24,8 +24,8 @@ export async function createItem(data: ItemInput, reporterId: string, imageUrls:
 export async function getItems() {
   await connectDB();
   
-  const items = await ItemModel.find()
-    .populate("reporter", "name email image") 
+  const items = await ItemModel.find({ status: "PUBLISHED" })
+    .populate("reporter", "name") 
     .sort({ createdAt: -1 })
     .lean();
 

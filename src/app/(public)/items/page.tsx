@@ -11,14 +11,14 @@ export default async function ItemsPage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-muted/20 pb-10">
+    <div className="pb-12">
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8 space-y-2">
-          <h1 className="text-3xl font-black tracking-tighter text-gray-900">
+        <div className="mb-20 space-y-2 border-l-4 border-red-600 pl-4">
+          <h1 className="text-3xl font-black tracking-tighter text-gray-900 uppercase">
             Browse Items
           </h1>
-          <p className="text-gray-500">
-            View recent lost and found reports. Login to claim items.
+          <p className="text-muted-foreground">
+            Explore reports from across the campus. Authenticate to interact with items.
           </p>
         </div>
         

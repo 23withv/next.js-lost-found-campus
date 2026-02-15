@@ -1,9 +1,10 @@
-import NextAuth from "next-auth";
+import NextAuth, { User } from "next-auth";
 import authConfig from "@/auth.config";
 import connectDB from "@/lib/db";
 import UserModel from "@/models/User";
 import bcrypt from "bcryptjs";
 import Credentials from "next-auth/providers/credentials";
+import { UserRole } from "./types/next-auth";
 
 export const {
   handlers: { GET, POST },
@@ -31,7 +32,7 @@ export const {
              id: user._id.toString(),
              name: user.name,
              email: user.email,
-             role: user.role,
+             role: user.role as UserRole ,
              image: user.image
           };
         }
@@ -39,26 +40,35 @@ export const {
       }
     })
   ],
-  callbacks: {
+callbacks: {
     ...authConfig.callbacks,
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role; 
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token.role && session.user) {
+        session.user.role = token.role as UserRole; 
+      }
+      return session;
+    },
     async signIn({ user, account }) {
       if (account?.provider === "google") {
         await connectDB();
         const existingUser = await UserModel.findOne({ email: user.email });
         
         if (!existingUser) {
-          await UserModel.create({
+          const newUser = await UserModel.create({
             name: user.name,
             email: user.email,
             image: user.image,
             role: "PELAPOR",
           });
-        }
-        
-        if (existingUser) {
-          user.role = existingUser.role;
+          user.role = newUser.role;
         } else {
-          user.role = "PELAPOR";
+          user.role = existingUser.role;
         }
       }
       return true;

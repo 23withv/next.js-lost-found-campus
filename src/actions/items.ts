@@ -48,11 +48,13 @@ export async function submitReport(formData: FormData) {
 
     await createItem(validatedData, session.user.id, imageUrls);
     
+    revalidatePath("/items");
+    revalidatePath("/");
+    
   } catch (error: any) {
     if (error.name === "ZodError") return { error: error.errors[0].message };
     return { error: "Internal system error." };
   }
 
-  revalidatePath("/");
-  redirect("/");
+  redirect("/items"); 
 }
