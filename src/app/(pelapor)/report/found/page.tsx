@@ -1,9 +1,9 @@
-import { FoundReportForm } from "@/components/forms/found-report-form";
+import { FoundReportForm } from "@/components/pelapor/reports/found-report-form";
 
 export default function FoundReportPage() {
   return (
-      <div className="pt-4 text-left">
-        <FoundReportForm type="FOUND" />
-      </div>
+    <div className="pt-4 text-left">
+      <FoundReportForm type="FOUND" />
+    </div>
   );
 }

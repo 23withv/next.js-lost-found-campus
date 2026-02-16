@@ -1,19 +1,19 @@
-import { auth } from "@/auth"
-import { getReportsByUserId } from "@/services/itemService"
-import { MyReportsList } from "@/components/pelapor/my-reports-list"
-import { redirect } from "next/navigation"
-import { FileText } from "lucide-react"
+import { auth } from "@/auth";
+import { getReportsByUserId } from "@/services/itemService";
+import { MyReportsList } from "@/components/pelapor/claims/my-reports-list";
+import { redirect } from "next/navigation";
+import { FileText } from "lucide-react";
 
-export const dynamic = "force-dynamic"
+export const dynamic = "force-dynamic";
 
 export default async function MyReportsPage() {
-  const session = await auth()
+  const session = await auth();
 
   if (!session?.user?.id) {
-    redirect("/login")
+    redirect("/login");
   }
 
-  const reports = await getReportsByUserId(session.user.id)
+  const reports = await getReportsByUserId(session.user.id);
 
   return (
     <div className="container mx-auto max-w-6xl px-4 py-10 md:py-16 min-h-screen">
@@ -33,5 +33,5 @@ export default async function MyReportsPage() {
 
       <MyReportsList reports={reports} />
     </div>
-  )
+  );
 }

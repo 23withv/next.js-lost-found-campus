@@ -1,4 +1,4 @@
-import { LostReportForm } from "@/components/forms/lost-report-form";
+import { LostReportForm } from "@/components/pelapor/reports/lost-report-form";
 
 export default function LostReportPage() {
   return (
