@@ -1,18 +1,18 @@
 import { auth } from "@/auth"
-import connectDB from "@/lib/db"
-import ItemModel from "@/models/Item"
+import { getItemBySlug } from "@/services/itemService"
 import { notFound, redirect } from "next/navigation"
 import Image from "next/image"
-import Link from "next/link"
-import { ArrowLeft, MapPin, Calendar, Tag } from "lucide-react"
+import { MapPin, Calendar, Tag } from "lucide-react"
 import { format } from "date-fns"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { ClaimForm } from "@/components/pelapor/claim-form"
 
 interface ClaimPageProps {
-  params: Promise<{ id: string }>
+  params: Promise<{ slug: string }>
 }
+
+export const dynamic = "force-dynamic"
 
 export default async function ClaimPage({ params }: ClaimPageProps) {
   const session = await auth()
@@ -21,16 +21,14 @@ export default async function ClaimPage({ params }: ClaimPageProps) {
     redirect("/")
   }
 
-  const { id } = await params
-
-  await connectDB()
-  const item = await ItemModel.findById(id).lean()
+  const resolvedParams = await params
+  
+  // Ambil data menggunakan fungsi service bySlug
+  const item = await getItemBySlug(resolvedParams.slug)
 
   if (!item || item.type !== "FOUND") {
     notFound()
   }
-
-  const parsedItem = JSON.parse(JSON.stringify(item))
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-4 md:p-8 pb-12 min-h-screen">
@@ -44,14 +42,13 @@ export default async function ClaimPage({ params }: ClaimPageProps) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-        
         <div className="lg:col-span-5 space-y-6">
           <Card className="overflow-hidden shadow-sm border">
             <div className="relative w-full aspect-video bg-muted border-b">
-              {parsedItem.images?.[0] ? (
+              {item.images?.[0] ? (
                 <Image 
-                  src={parsedItem.images[0]} 
-                  alt={parsedItem.title} 
+                  src={item.images[0]} 
+                  alt={item.title} 
                   fill 
                   className="object-cover" 
                   unoptimized 
@@ -65,7 +62,7 @@ export default async function ClaimPage({ params }: ClaimPageProps) {
             </div>
             <CardContent className="p-6 space-y-4 bg-card">
               <h2 className="text-xl font-extrabold text-foreground tracking-tight line-clamp-2">
-                {parsedItem.title}
+                {item.title}
               </h2>
               
               <div className="flex flex-col gap-3">
@@ -75,7 +72,7 @@ export default async function ClaimPage({ params }: ClaimPageProps) {
                   </div>
                   <div className="flex flex-col min-w-0">
                     <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">Location</span>
-                    <span className="text-sm font-medium text-foreground truncate">{parsedItem.location}</span>
+                    <span className="text-sm font-medium text-foreground truncate">{item.location}</span>
                   </div>
                 </div>
 
@@ -85,7 +82,7 @@ export default async function ClaimPage({ params }: ClaimPageProps) {
                   </div>
                   <div className="flex flex-col min-w-0">
                     <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">Date Found</span>
-                    <span className="text-sm font-medium text-foreground truncate">{format(new Date(parsedItem.date), "PPP")}</span>
+                    <span className="text-sm font-medium text-foreground truncate">{format(new Date(item.date), "PPP")}</span>
                   </div>
                 </div>
 
@@ -96,7 +93,7 @@ export default async function ClaimPage({ params }: ClaimPageProps) {
                   <div className="flex flex-col min-w-0">
                     <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">Category</span>
                     <Badge variant="outline" className="w-fit mt-0.5">
-                      {parsedItem.category}
+                      {item.category}
                     </Badge>
                   </div>
                 </div>
@@ -106,9 +103,9 @@ export default async function ClaimPage({ params }: ClaimPageProps) {
         </div>
 
         <div className="lg:col-span-7">
-          <ClaimForm itemId={parsedItem._id} />
+          {/* PENTING: Komponen form tetap menerima ObjectId murni untuk disimpan di database Claim */}
+          <ClaimForm itemId={item._id.toString()} />
         </div>
-
       </div>
     </div>
   )
