@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -18,15 +19,7 @@ const nextConfig: NextConfig = {
         hostname: "lh3.googleusercontent.com", 
         pathname: "/**",
       },
-      {
-        protocol: "https",
-        hostname: "placehold.co",
-        pathname: "/**",
-      },
     ],
-    qualities: [75, 90],
-    minimumCacheTTL: 60,
-    formats: ['image/webp'],
   },
 };
 

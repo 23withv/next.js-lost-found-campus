@@ -3,6 +3,12 @@ import { IItem } from "@/types/db";
 
 const ItemSchema = new Schema<IItem>(
   {
+    slug: {
+      type: String,
+      unique: true,
+      required: [true, "Slug is required"],
+      index: true
+    },
     title: { 
       type: String, 
       required: [true, "Title is required"],
@@ -51,8 +57,8 @@ const ItemSchema = new Schema<IItem>(
     },
     status: { 
       type: String, 
-      enum: ["PENDING", "PUBLISHED", "CLAIMED"], 
-      default: "PENDING" 
+      enum: ["PUBLISHED", "CLAIMED"], 
+      default: "PUBLISHED" 
     },
     reporter: { 
       type: Schema.Types.ObjectId, 

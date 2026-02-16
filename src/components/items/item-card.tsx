@@ -3,12 +3,13 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
-import { MapPin, Calendar, User } from "lucide-react";
+import { MapPin, Calendar, User, Eye } from "lucide-react";
 import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ClaimButton } from "./claim-button";
+import { StandardImage } from "../ui/standard-image";
 
 interface ItemCardProps {
   item: any;
@@ -17,32 +18,84 @@ interface ItemCardProps {
 
 export function ItemCard({ item, currentUser }: ItemCardProps) {
   const imageUrl = item.images?.[0] || "";
+
   const isAdmin = currentUser?.role === "ADMIN";
-  const isPelapor = currentUser?.role === "PELAPOR";
   const isAuthenticated = !!currentUser;
+
+  const isOwner = isAuthenticated && 
+    (item.reporter?._id?.toString() === currentUser.id || item.reporter?.toString() === currentUser.id);
+  
+    const renderActionButtons = () => {
+    if (isAdmin) {
+      return (
+        <Link
+          href={`/dashboard/items/${item.slug}`}
+          className={cn(
+            buttonVariants({ variant: "secondary", size: "sm" }),
+            "w-full bg-slate-900 text-white hover:bg-slate-800"
+          )}
+        >
+          Manage Item
+        </Link>
+      );
+    }
+
+    if (isOwner) {
+      return (
+        <Link
+          href={`/my-reports`}
+          className={cn(
+            buttonVariants({ variant: "outline", size: "sm" }),
+            "w-full font-bold h-9 transition-all border-slate-200 hover:bg-slate-50 hover:text-red-600"
+          )}
+        >
+          <Eye className="mr-2 h-4 w-4" />
+          All My Reports
+        </Link>
+      );
+    }
+
+    if (item.type === "FOUND") {
+      return (
+        <ClaimButton 
+          itemId={item._id.toString()}
+          itemSlug={item.slug}
+          isAuthenticated={isAuthenticated} 
+          userRole={currentUser?.role} 
+        />
+      );
+    }
+
+    if (item.type === "LOST") {
+      return (
+        <Link
+          href={`/items/${item.slug}`}
+          className={cn(
+            buttonVariants({ variant: "outline", size: "sm" }),
+            "w-full font-bold h-9 transition-all border-slate-200 hover:bg-slate-50 hover:text-red-600"
+          )}
+        >
+          <Eye className="mr-2 h-4 w-4" />
+          View Details
+        </Link>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <Card className="group relative flex flex-col overflow-hidden border-border/50 bg-background transition-all hover:shadow-lg hover:border-border">
-      <div 
-        className="relative w-full overflow-hidden bg-muted/30" 
-        style={{ aspectRatio: "4/3" }}
-      >
-        {imageUrl ? (
-          <Image 
-            src={imageUrl} 
-            alt={item.title || "Item Image"} 
-            fill 
-            sizes="(max-width: 768px) 100vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            unoptimized 
-            priority={false}
-          />
-        ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-muted-foreground">
-            <User className="h-8 w-8 opacity-20" />
-            <span className="text-xs font-medium">No Image Available</span>
-          </div>
-        )}        
+      <div className="relative w-full">
+        <Link href={`/items/${item.slug}`} className="absolute inset-0 z-10">
+          <span className="sr-only">View Details</span>
+        </Link>
+
+        <StandardImage 
+          src={item.images?.[0]} 
+          aspectRatio="card" 
+          alt={item.title} 
+        />
       </div>
 
       <CardContent className="flex flex-1 flex-col gap-1.5 px-3 pt-1.5 pb-1.5">
@@ -55,7 +108,7 @@ export function ItemCard({ item, currentUser }: ItemCardProps) {
             <div className="flex h-5 w-5 items-center justify-center rounded-full bg-muted">
               <User className="h-3 w-3 shrink-0" />
             </div>
-            <span>Anonymous Reporter</span> 
+            <span>{isOwner ? "You (Reporter)" : "Anonymous Reporter"}</span> 
           </div>
         </div>
 
@@ -75,34 +128,8 @@ export function ItemCard({ item, currentUser }: ItemCardProps) {
         </div>
       </CardContent>
 
-      <CardFooter className="px-3 pb-3 pt-0">
-        {isAdmin ? (
-          <Link
-            href={`/dashboard/items/${item._id}`}
-            className={cn(
-              buttonVariants({ variant: "secondary", size: "sm" }),
-              "w-full bg-slate-900 text-white hover:bg-slate-800"
-            )}
-          >
-            Manage Item
-          </Link>
-        ) : item.type === "FOUND" && isPelapor ? (
-          <ClaimButton 
-            itemId={item._id} 
-            isAuthenticated={isAuthenticated} 
-            userRole={currentUser?.role} 
-          />
-        ) : item.type === "LOST" ? (
-          <Link
-            href={`/my-reports`}
-            className={cn(
-              buttonVariants({ variant: "outline", size: "sm" }),
-              "w-full font-bold h-9 transition-all border-slate-200 hover:bg-slate-50 hover:text-red-600"
-            )}
-          >
-            I Found This
-          </Link>
-        ) : null}
+      <CardFooter className="px-3 pb-3 pt-0 relative z-20">
+        {renderActionButtons()}
       </CardFooter>
     </Card>
   );

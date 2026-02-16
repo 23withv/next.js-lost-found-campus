@@ -4,7 +4,7 @@ import { useState } from "react"
 import { changeItemStatus, deleteItem } from "@/actions/admin"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import { CheckCircle, Trash2, Archive, Loader2 } from "lucide-react"
+import { Trash2, Archive, Loader2 } from "lucide-react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,33 +35,42 @@ export function ItemManagementControls({ itemId, currentStatus }: ControlsProps)
 
   return (
     <div className="flex flex-col gap-3">
-      {currentStatus === "PENDING" && (
-        <Button 
-          onClick={() => handleAction(() => changeItemStatus(itemId, "PUBLISHED"), "Publishing...")}
-          disabled={isPending}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
-        >
-          {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle className="mr-2 h-4 w-4" />}
-          Approve and Publish
-        </Button>
-      )}
-
       {currentStatus === "PUBLISHED" && (
-        <Button 
-          onClick={() => handleAction(() => changeItemStatus(itemId, "CLAIMED"), "Archiving...")}
-          disabled={isPending}
-          variant="secondary"
-          className="w-full"
-        >
-          <Archive className="mr-2 h-4 w-4" />
-          Mark as Resolved
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button 
+              variant="default"
+              className="w-full bg-slate-900 hover:bg-slate-800 text-white"
+              disabled={isPending}
+            >
+              <Archive className="mr-2 h-4 w-4" />
+              Mark as Resolved (Claimed)
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Resolve this item?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will change the item status to CLAIMED. This action indicates that the item has been returned to its rightful owner.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={() => handleAction(() => changeItemStatus(itemId, "CLAIMED"), "Resolving...")} 
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              >
+                Yes, Mark as Resolved
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )}
 
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button variant="destructive" className="w-full" disabled={isPending}>
-            <Trash2 className="mr-2 h-4 w-4" />
+            {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
             Delete Report
           </Button>
         </AlertDialogTrigger>
@@ -75,7 +84,10 @@ export function ItemManagementControls({ itemId, currentStatus }: ControlsProps)
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleAction(() => deleteItem(itemId), "Deleting...")} className="bg-red-600">
+            <AlertDialogAction 
+              onClick={() => handleAction(() => deleteItem(itemId), "Deleting...")} 
+              className="bg-red-600"
+            >
               Delete Permanently
             </AlertDialogAction>
           </AlertDialogFooter>

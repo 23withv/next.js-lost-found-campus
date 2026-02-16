@@ -2,11 +2,12 @@ import { Document, Types } from "mongoose";
 
 export type ItemType = "LOST" | "FOUND";
 export type ItemCategory = "Electronics" | "Documents" | "Keys" | "Clothing" | "Others";
-export type ItemStatus = "PENDING" | "PUBLISHED" | "CLAIMED";
+export type ItemStatus = "PUBLISHED" | "CLAIMED";
 export type ClaimStatus = "PENDING" | "VERIFIED" | "REJECTED";
 
 export interface IItem extends Document {
   _id: Types.ObjectId;
+  slug: string;
   title: string;
   description: string;
   hiddenDetails: string;

@@ -16,6 +16,7 @@ import { LayoutDashboard, Users, Package, LogOut } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { LogoutButton } from "@/components/auth/logout-button"
+import { title } from "process"
 
 const items = [
   {
@@ -26,6 +27,11 @@ const items = [
   {
     title: "Manage Items",
     url: "/dashboard/items",
+    icon: Package,
+  },
+  {
+    title: "Manage Claims",
+    url: "/dashboard/claims",
     icon: Package,
   },
   {

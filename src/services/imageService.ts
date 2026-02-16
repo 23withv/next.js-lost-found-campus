@@ -1,24 +1,26 @@
-import sharp from "sharp";
-import cloudinary from "@/lib/cloudinary";
+import sharp from "sharp"
+import cloudinary from "@/lib/cloudinary"
 
 export async function uploadImage(fileBuffer: Buffer, folder: string = "lost-found"): Promise<string> {
   try {
-    let quality = 80;
+    let quality = 80
     let processedBuffer = await sharp(fileBuffer)
-      .resize({ width: 1200, height: 1200, fit: "inside" })
+      .resize({ width: 1000, height: 1000, fit: "inside", withoutEnlargement: true })
       .webp({ quality })
-      .toBuffer();
+      .toBuffer()
 
-    while (processedBuffer.length > 200 * 1024 && quality > 10) {
-      quality -= 10;
-      processedBuffer = await sharp(fileBuffer)
-        .resize({ width: 1200, height: 1200, fit: "inside" })
+    while (processedBuffer.length > 200 * 1024 && quality > 20) {
+      quality -= 15
+      processedBuffer = await sharp(processedBuffer) 
         .webp({ quality })
-        .toBuffer();
+        .toBuffer()
     }
 
     if (processedBuffer.length > 200 * 1024) {
-      throw new Error("Image too large after compression");
+      processedBuffer = await sharp(processedBuffer)
+        .resize({ width: 800 })
+        .webp({ quality: 20 })
+        .toBuffer()
     }
 
     return new Promise((resolve, reject) => {
@@ -27,18 +29,19 @@ export async function uploadImage(fileBuffer: Buffer, folder: string = "lost-fou
           folder: folder,
           resource_type: "image",
           format: "webp",
+          unique_filename: true,
         },
         (error, result) => {
-          if (error) return reject(error);
-          if (result) return resolve(result.secure_url);
-          reject(new Error("Upload failed"));
+          if (error) return reject(error)
+          if (result) return resolve(result.secure_url)
+          reject(new Error("Upload failed"))
         }
-      );
+      )
       
-      uploadStream.end(processedBuffer);
-    });
+      uploadStream.end(processedBuffer)
+    })
   } catch (error) {
-    console.error("Image Upload Error:", error);
-    throw new Error("Failed to process and upload image");
+    console.error("Image Processing Error:", error)
+    throw new Error("Image processing failed")
   }
 }

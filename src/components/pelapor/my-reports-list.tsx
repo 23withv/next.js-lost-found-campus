@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { 
   Table, 
@@ -7,102 +7,106 @@ import {
   TableHead, 
   TableHeader, 
   TableRow 
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
-import { MapPin, Calendar, ExternalLink } from "lucide-react";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { buttonVariants } from "@/components/ui/button"
+import { format } from "date-fns"
+import { MapPin, Calendar, ExternalLink, PackageSearch } from "lucide-react"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 interface MyReportsListProps {
-  reports: any[];
+  reports: any[]
 }
 
 export function MyReportsList({ reports }: MyReportsListProps) {
   if (reports.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center border-2 border-dashed rounded-xl">
-        <p className="text-muted-foreground">You haven't submitted any reports yet.</p>
+      <div className="flex min-h-[400px] flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted bg-muted/10 p-8 text-center animate-in fade-in-50 duration-500">
+        <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/20">
+          <PackageSearch className="h-12 w-12 text-red-500" />
+        </div>
+        <h2 className="mb-2 text-2xl font-bold tracking-tight text-foreground">
+          No Reports Found
+        </h2>
+        <p className="mb-8 max-w-md text-muted-foreground">
+          You haven't submitted any lost or found reports yet. Help the community by reporting items you find or listing items you've lost.
+        </p>
         <Link 
           href="/items" 
-          className="mt-4 text-sm font-bold text-red-600 hover:underline"
+          className={cn(
+            buttonVariants({ variant: "default", size: "lg" }),
+            "bg-red-600 text-white hover:bg-red-700 font-bold shadow-sm"
+          )}
         >
-          Browse public feed
+          Browse Public Feed
         </Link>
       </div>
-    );
+    )
   }
 
-  return (
-    <div className="rounded-md border bg-white dark:bg-slate-950 shadow-sm overflow-hidden">
-      <Table>
-        <TableHeader className="bg-muted/50">
-          <TableRow>
-            <TableHead className="font-bold">Item</TableHead>
-            <TableHead className="font-bold">Type</TableHead>
-            <TableHead className="font-bold">Location</TableHead>
-            <TableHead className="font-bold">Status</TableHead>
-            <TableHead className="font-bold">Date Reported</TableHead>
-            <TableHead className="text-right font-bold">Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {reports.map((report) => (
-            <TableRow key={report._id} className="group">
-              <TableCell>
-                <span className="font-semibold text-foreground line-clamp-1">
-                  {report.title}
-                </span>
-              </TableCell>
-              <TableCell>
-                <Badge 
-                  variant="outline" 
-                  className={cn(
-                    "font-bold uppercase text-[10px]",
-                    report.type === "FOUND" 
-                      ? "border-emerald-200 text-emerald-700 bg-emerald-50" 
-                      : "border-blue-200 text-blue-700 bg-blue-50"
-                  )}
-                >
-                  {report.type}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-1 text-muted-foreground">
-                  <MapPin className="h-3 w-3" />
-                  <span className="text-xs truncate max-w-[150px]">{report.location}</span>
-                </div>
-              </TableCell>
-              <TableCell>
-                <Badge 
-                  className={cn(
-                    "text-[10px] font-bold",
-                    report.status === "PUBLISHED" && "bg-emerald-500",
-                    report.status === "PENDING" && "bg-amber-500",
-                    report.status === "CLAIMED" && "bg-slate-700"
-                  )}
-                >
-                  {report.status}
-                </Badge>
-              </TableCell>
-              <TableCell className="text-xs text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  {format(new Date(report.createdAt), "MMM dd, yyyy")}
-                </div>
-              </TableCell>
-              <TableCell className="text-right">
-                <Link
-                  href={`/items/${report._id}`}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-red-600 hover:text-red-700 transition-colors"
-                >
-                  View <ExternalLink className="h-3 w-3" />
-                </Link>
-              </TableCell>
+return (
+    <div className="w-full rounded-xl border bg-card shadow-sm overflow-hidden animate-in fade-in-50 duration-500">
+      <div className="w-full overflow-x-auto">
+        <Table className="w-full min-w-[1000px] text-sm">
+          <TableHeader className="bg-muted/50">
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="w-[35%] px-6 py-4 font-bold text-foreground">Item Details</TableHead>
+              <TableHead className="w-[10%] px-6 py-4 font-bold text-foreground">Type</TableHead>
+              <TableHead className="w-[20%] px-6 py-4 font-bold text-foreground">Location</TableHead>
+              <TableHead className="w-[15%] px-6 py-4 font-bold text-foreground">Status</TableHead>
+              <TableHead className="w-[15%] px-6 py-4 font-bold text-foreground">Date Reported</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody className="divide-y">
+            {reports.map((report) => {
+              const reportType = (report.type || "").toLowerCase() as "found" | "lost"
+              const reportStatus = (report.status || "").toLowerCase() as "published" | "claimed" | "pending"
+
+              return (
+                <TableRow key={report._id} className="group hover:bg-muted/30 transition-colors">
+                  <TableCell className="px-6 py-5">
+                    <span className="font-bold text-foreground line-clamp-2 pr-4">
+                      {report.title}
+                    </span>
+                  </TableCell>
+                  <TableCell className="px-6 py-5">
+                    <Badge
+                      variant={reportType}
+                      className="font-bold uppercase tracking-wider text-[10px] px-2.5 py-1"
+                    >
+                      {report.type}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="px-6 py-5">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+                        <MapPin className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
+                      </div>
+                      <span className="text-sm font-medium line-clamp-2">
+                        {report.location}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-5">
+                    <Badge variant={reportStatus as any} className="px-3 py-1.5 text-[10px] uppercase tracking-widest font-bold shadow-sm">
+                      {report.status}
+                    </Badge>                  
+                  </TableCell>
+                  <TableCell className="px-6 py-5 text-sm text-muted-foreground font-medium">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
+                        <Calendar className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      {format(new Date(report.createdAt), "MMM dd, yyyy")}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </div>
     </div>
-  );
+  )
 }

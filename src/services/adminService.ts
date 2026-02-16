@@ -1,6 +1,7 @@
 import connectDB from "@/lib/db"
 import ItemModel from "@/models/Item"
 import UserModel from "@/models/User"
+import ClaimModel from "@/models/Claim"
 
 export async function getAllItems() {
   try {
@@ -16,16 +17,16 @@ export async function getAllItems() {
   }
 }
 
-export async function getItemById(id: string) {
+export async function getAdminItemBySlug(slug: string) {
   try {
     await connectDB()
-    const item = await ItemModel.findById(id)
+    const item = await ItemModel.findOne({ slug })
       .populate("reporter", "name email image phone role")
       .lean()
     if (!item) return null
     return JSON.parse(JSON.stringify(item))
   } catch (error) {
-    console.error("Get Item By Id Error:", error)
+    console.error("Get Admin Item By Slug Error:", error)
     return null
   }
 }
@@ -82,5 +83,43 @@ export async function deleteItemFromDB(id: string) {
     await ItemModel.findByIdAndDelete(id)
   } catch (error) {
     console.error("Delete Item Error:", error)
+  }
+}
+
+export async function getAllClaims() {
+  try {
+    await connectDB()
+    const claims = await ClaimModel.find()
+      .populate({
+        path: "item",
+        select: "title slug type status location images"
+      })
+      .populate({
+        path: "claimer",
+        select: "name email phone"
+      })
+      .sort({ createdAt: -1 })
+      .lean()
+      
+    return JSON.parse(JSON.stringify(claims))
+  } catch (error) {
+    console.error("Get All Claims Error:", error)
+    return []
+  }
+}
+
+export async function getClaimById(id: string) {
+  try {
+    await connectDB()
+    const claim = await ClaimModel.findById(id)
+      .populate("item")
+      .populate("claimer", "name email phone role")
+      .lean()
+      
+    if (!claim) return null
+    return JSON.parse(JSON.stringify(claim))
+  } catch (error) {
+    console.error("Get Claim By Id Error:", error)
+    return null
   }
 }

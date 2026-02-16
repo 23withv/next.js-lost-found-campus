@@ -55,7 +55,7 @@ export async function submitClaim(itemId: string, data: ClaimFormValues) {
       alternateContact: validationResult.data.alternateContact || null,
     })
 
-    revalidatePath(`/items/${itemId}`)
+    revalidatePath(`/items/${item.slug}`)
     revalidatePath("/dashboard/claims")
 
     return { success: "Claim submitted successfully. Admin will review your proof." }

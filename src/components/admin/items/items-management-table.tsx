@@ -5,9 +5,6 @@ import { format } from "date-fns"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { toast } from "sonner"
-import { changeItemStatus } from "@/actions/admin"
 import { Search, Eye } from "lucide-react"
 import { PaginationControls } from "@/components/ui/pagination-controls"
 import Link from "next/link"
@@ -39,15 +36,6 @@ export function ItemsManagementTable({ items }: ItemsManagementTableProps) {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   )
-
-  const handleStatusChange = async (itemId: string, newStatus: string) => {
-    const result = await changeItemStatus(itemId, newStatus)
-    if (result.error) {
-      toast.error(result.error)
-    } else {
-      toast.success(result.success)
-    }
-  }
 
   return (
     <div className="space-y-6">
@@ -102,9 +90,9 @@ export function ItemsManagementTable({ items }: ItemsManagementTableProps) {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <Badge className={cn("border-none text-white", item.type === "FOUND" ? "bg-emerald-500" : "bg-red-500")}>
+                    <Badge variant={item.type === "FOUND" ? "found" : "lost"} className="uppercase font-bold">
                       {item.type}
-                    </Badge>
+                    </Badge>                 
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
@@ -113,20 +101,16 @@ export function ItemsManagementTable({ items }: ItemsManagementTableProps) {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <Select defaultValue={item.status} onValueChange={(val) => handleStatusChange(item._id, val)}>
-                      <SelectTrigger className="w-35 h-9 text-xs font-semibold">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="PENDING" className="font-medium">PENDING</SelectItem>
-                        <SelectItem value="PUBLISHED" className="font-medium text-blue-600">PUBLISHED</SelectItem>
-                        <SelectItem value="CLAIMED" className="font-medium text-emerald-600">CLAIMED</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Badge 
+                      variant={item.status?.toLowerCase() as any} 
+                      className="uppercase font-bold"
+                    >
+                      {item.status}
+                    </Badge>
                   </td>
                   <td className="px-6 py-4 text-right">
                     <Link 
-                      href={`/dashboard/items/${item._id}`}
+                      href={`/dashboard/items/${item.slug}`}
                       className={buttonVariants({ variant: "ghost", size: "icon" })}
                     >
                       <Eye className="h-4 w-4 text-muted-foreground" />
