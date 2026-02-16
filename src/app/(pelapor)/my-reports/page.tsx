@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { getReportsByUserId } from "@/services/itemService";
-import { MyReportsList } from "@/components/pelapor/claims/my-reports-list";
+import { MyReportsList } from "@/components/pelapor/my-reports-list";
 import { redirect } from "next/navigation";
 import { FileText } from "lucide-react";
 
