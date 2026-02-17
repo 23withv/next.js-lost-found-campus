@@ -16,19 +16,17 @@ export default async function MyReportsPage() {
   const reports = await getReportsByUserId(session.user.id);
 
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-10 md:py-16 min-h-screen">
-      <div className="mb-10 flex items-center gap-4 border-l-4 border-red-600 pl-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
-          <FileText className="h-6 w-6 text-red-600 dark:text-red-500" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-black tracking-tighter text-foreground uppercase">
-            My Reports
+    <div className="min-h-screen">
+      <div className="mb-10 flex flex-col gap-2">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-1 rounded-full bg-red-600" />
+          <h1 className="text-4xl font-black tracking-tighter text-foreground uppercase italic">
+            My Reporting History
           </h1>
-          <p className="text-muted-foreground mt-1">
-            Track and manage all the items you have reported across the campus.
-          </p>
         </div>
+        <p className="text-muted-foreground font-medium">
+          Manage and track all items you have contributed to the campus network.
+        </p>
       </div>
 
       <MyReportsList reports={reports} />

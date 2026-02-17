@@ -43,7 +43,7 @@ export function ItemImageGallery({ item }: ItemImageGalleryProps) {
         )}
       </div>
 
-      <CardContent className="bg-card pt-6">
+      <CardContent className="bg-card">
         <h2 className="text-2xl font-extrabold text-foreground mb-2 tracking-tight uppercase italic">
           {item.title}
         </h2>

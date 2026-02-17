@@ -7,7 +7,7 @@ import { RegisterForm } from "@/components/auth/register-form";
 
 export default function RegisterPage() {
   return (
-    <Card className="w-full">
+    <Card className="w-full max-w-sm mx-auto my-10">
       <CardHeader>
         <CardTitle className="text-xl">Create an account</CardTitle>
         <CardDescription>

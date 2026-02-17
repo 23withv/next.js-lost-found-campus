@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { Search, ShieldCheck, UploadCloud, ArrowRight, PackageOpen } from "lucide-react";
 import { auth } from "@/auth";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
-import { Navbar } from "@/components/layout/navbar";
 import { getItems } from "@/services/itemService";
 import { ItemCard } from "@/components/items/item-card";
+import { Header } from "@/components/layout/header";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +19,7 @@ export default async function HomePage() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground selection:bg-red-100 selection:text-red-900">
       
-      <Navbar />
+      <Header variant="home" />
 
       <main className="flex-1">
         <section className="relative overflow-hidden pt-16 md:pt-24 lg:pt-32 pb-16 md:pb-24">
