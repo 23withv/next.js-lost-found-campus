@@ -1,4 +1,3 @@
-```markdown
 # Campus L&F (Lost and Found)
 
 Campus L&F is a modern, web-based Lost and Found management system built specifically for campus environments. It streamlines the process of reporting lost belongings, cataloging found items, and handling secure claim verifications through a robust role-based architecture.
