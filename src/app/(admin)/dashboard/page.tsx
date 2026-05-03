@@ -27,10 +27,10 @@ export default async function DashboardOverviewPage() {
   return (
     <div className="space-y-6 pb-8">
       <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-bold tracking-tight text-foreground">
+        <h2 className="text-3xl font-bold tracking-tight">
           Dashboard Overview
         </h2>
-        <p className="text-sm text-muted-foreground font-medium">
+        <p className="text-muted-foreground mt-2">
           Monitor campus lost and found statistics and recent activities.
         </p>
       </div>

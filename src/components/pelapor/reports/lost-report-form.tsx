@@ -12,13 +12,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { toast } from "sonner";
 import { submitReport } from "@/actions/items";
 import { Loader2, UploadCloud, X, FileImage } from "lucide-react";
 
 export function LostReportForm() {
-  const [state, formAction, isPending] = useActionState(submitReport, undefined);
+  const [state, formAction, isPending] = useActionState(
+    submitReport,
+    undefined,
+  );
   const [preview, setPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -62,13 +71,14 @@ export function LostReportForm() {
           Report a Missing Item
         </CardTitle>
         <CardDescription className="text-base">
-          Provide as much detail as possible to help our team and other students identify your belongings.
+          Provide as much detail as possible to help our team and other students
+          identify your belongings.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form action={formAction} className="space-y-6">
           <input type="hidden" name="type" value="LOST" />
-          
+
           <input
             type="file"
             id="image-upload"
@@ -81,11 +91,11 @@ export function LostReportForm() {
 
           <div className="space-y-2">
             <Label htmlFor="title">What did you lose?</Label>
-            <Input 
-              id="title" 
-              name="title" 
-              placeholder="e.g. Silver Macbook Air" 
-              required 
+            <Input
+              id="title"
+              name="title"
+              placeholder="e.g. Silver Macbook Air"
+              required
               minLength={5}
             />
           </div>
@@ -109,21 +119,21 @@ export function LostReportForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="date">Date Lost</Label>
-              <Input 
-                id="date" 
-                name="date" 
-                type="date" 
-                required 
-                defaultValue={new Date().toISOString().split('T')[0]}
+              <Input
+                id="date"
+                name="date"
+                type="date"
+                required
+                defaultValue={new Date().toISOString().split("T")[0]}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="location">Last Seen Location</Label>
-              <Input 
-                id="location" 
-                name="location" 
-                placeholder="e.g. Cafeteria, Library" 
-                required 
+              <Input
+                id="location"
+                name="location"
+                placeholder="e.g. Cafeteria, Library"
+                required
               />
             </div>
           </div>
@@ -131,21 +141,28 @@ export function LostReportForm() {
           <div className="space-y-2">
             <Label>Photo (Optional)</Label>
             {!preview ? (
-              <div 
+              <div
                 onClick={() => fileInputRef.current?.click()}
                 className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-gray-900 dark:border-gray-700 transition-all group"
               >
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                   <UploadCloud className="w-8 h-8 mb-2 text-gray-400 group-hover:text-blue-500 transition-colors" />
                   <p className="text-sm text-gray-500">
-                    <span className="font-semibold text-blue-600">Click to upload</span> (Max 10MB)
+                    <span className="font-semibold text-blue-600">
+                      Click to upload
+                    </span>{" "}
+                    (Max 10MB)
                   </p>
                 </div>
               </div>
             ) : (
               <div className="relative flex items-center p-3 border rounded-lg bg-background shadow-sm animate-in fade-in zoom-in duration-300">
                 <div className="h-16 w-16 relative rounded-md overflow-hidden shrink-0 border bg-muted">
-                  <img src={preview} alt="Preview" className="h-full w-full object-cover" />
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="h-full w-full object-cover"
+                  />
                 </div>
                 <div className="ml-4 flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">{fileName}</p>
@@ -168,36 +185,41 @@ export function LostReportForm() {
 
           <div className="space-y-2">
             <Label htmlFor="description">Public Description</Label>
-            <Textarea 
-              id="description" 
-              name="description" 
-              placeholder="Describe specific marks or details to help identification..." 
-              required 
+            <Textarea
+              id="description"
+              name="description"
+              placeholder="Describe specific marks or details to help identification..."
+              required
               minLength={10}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="hiddenDetails" className="text-blue-600 font-semibold">
+            <Label
+              htmlFor="hiddenDetails"
+              className="text-blue-600 font-semibold"
+            >
               Hidden Verification Details
             </Label>
-            <Textarea 
-              id="hiddenDetails" 
-              name="hiddenDetails" 
-              placeholder="E.g. Serial number, specific wallpaper, or item contents..." 
-              required 
+            <Textarea
+              id="hiddenDetails"
+              name="hiddenDetails"
+              placeholder="E.g. Serial number, specific wallpaper, or item contents..."
+              required
               className="border-blue-200 focus-visible:ring-blue-500"
               minLength={10}
             />
           </div>
 
-          <Button 
-            type="submit" 
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20" 
+          <Button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20"
             disabled={isPending}
           >
             {isPending ? (
-              <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</>
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...
+              </>
             ) : (
               "Submit Lost Report"
             )}

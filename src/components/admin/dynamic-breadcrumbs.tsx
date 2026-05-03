@@ -12,9 +12,9 @@ import React from "react"
 
 const routeMap: Record<string, string> = {
   dashboard: "Dashboard",
-  items: "Inventory Management",
+  items: "Items Management",
+  claims: "Claims Management",
   users: "User Management",
-  settings: "Settings",
 }
 
 export function DynamicBreadcrumbs() {

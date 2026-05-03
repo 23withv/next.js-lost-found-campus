@@ -5,6 +5,18 @@ export type ItemCategory = "Electronics" | "Documents" | "Keys" | "Clothing" | "
 export type ItemStatus = "PUBLISHED" | "CLAIMED";
 export type ClaimStatus = "PENDING" | "VERIFIED" | "REJECTED";
 
+export interface IUser extends Document {
+  _id: Types.ObjectId;
+  name: string;
+  email: string;
+  password?: string | null;
+  image?: string | null;
+  role: "ADMIN" | "PELAPOR";
+  phone?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface IItem extends Document {
   _id: Types.ObjectId;
   slug: string;

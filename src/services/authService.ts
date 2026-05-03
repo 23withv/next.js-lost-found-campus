@@ -1,8 +1,8 @@
-"use server"
+"use server";
 
 import connectDB from "@/lib/db";
 import UserModel from "@/models/User";
-import { registerSchema } from "@/types/authSchema";
+import { registerSchema } from "@/lib/validators/authSchema";
 import bcrypt from "bcryptjs";
 
 export async function registerUser(formData: FormData) {
@@ -29,7 +29,7 @@ export async function registerUser(formData: FormData) {
     email,
     phone,
     password: hashedPassword,
-    role: "PELAPOR"
+    role: "PELAPOR",
   });
 
   return { success: true };

@@ -48,7 +48,7 @@ export function RecentItems({ items }: RecentItemsProps) {
               <TableHeader>
                 <TableRow className="bg-transparent hover:bg-transparent border-b">
                   <TableHead className="w-12 text-center font-semibold text-muted-foreground py-3">#</TableHead>
-                  <TableHead className="min-w-[180px] font-semibold text-muted-foreground py-3">Item Details</TableHead>
+                  <TableHead className="min-w-45 font-semibold text-muted-foreground py-3">Item Details</TableHead>
                   <TableHead className="w-24 font-semibold text-muted-foreground py-3">Type</TableHead>
                   <TableHead className="w-12 text-right font-semibold text-muted-foreground py-3 pr-6">Action</TableHead>
                 </TableRow>
@@ -64,13 +64,13 @@ export function RecentItems({ items }: RecentItemsProps) {
                     </TableCell>
                     <TableCell className="py-3">
                       <div className="flex flex-col gap-1">
-                        <span className="font-semibold text-foreground line-clamp-1 max-w-[200px]">
+                        <span className="font-semibold text-foreground line-clamp-1 max-w-50">
                           {item.title}
                         </span>
                         <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <MapPin className="h-3 w-3 shrink-0" />
-                            <span className="line-clamp-1 max-w-[100px]">{item.location}</span>
+                            <span className="line-clamp-1 max-w-25">{item.location}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <Calendar className="h-3 w-3 shrink-0" />

@@ -39,7 +39,7 @@ export function ClaimButton({ itemId, itemSlug, isAuthenticated, userRole }: Cla
       type="button"
       onClick={handleClaim}
       variant="default"
-      className="w-full font-bold h-9 bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-50 dark:text-slate-900 transition-all cursor-pointer"
+      className="w-full font-bold h-9 bg-red-600 hover:bg-red-700 text-white transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md active:scale-98"
     >
       Claim Item
     </Button>   

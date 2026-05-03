@@ -28,7 +28,7 @@ export function MyReportsList({ reports }: MyReportsListProps) {
 
   if (reports.length === 0) {
     return (
-      <div className="flex min-h-[500px] md:min-h-[600px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-muted bg-background/50 p-12 text-center animate-in fade-in-50 duration-500">
+      <div className="flex min-h-125 md:min-h-150 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-muted bg-background/50 p-12 text-center animate-in fade-in-50 duration-500">
         <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-red-50 text-red-500">
           <PackageSearch className="h-12 w-12" />
         </div>
@@ -63,12 +63,12 @@ export function MyReportsList({ reports }: MyReportsListProps) {
           <TableHeader>
             <TableRow className="bg-muted/50 hover:bg-muted/50 border-b-2">
               <TableHead className="w-12 text-center font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">No</TableHead>
-              <TableHead className="min-w-[150px] font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">Title</TableHead>
-              <TableHead className="w-[280px] font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">Public Description</TableHead>
-              <TableHead className="w-[280px] font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">Hidden Details</TableHead>
+              <TableHead className="min-w-37.5 font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">Title</TableHead>
+              <TableHead className="w-70 font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">Public Description</TableHead>
+              <TableHead className="w-70 font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">Hidden Details</TableHead>
               <TableHead className="w-24 font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">Type</TableHead>
               <TableHead className="w-28 font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">Category</TableHead>
-              <TableHead className="min-w-[150px] font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">Location</TableHead>
+              <TableHead className="min-w-37.5 font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">Location</TableHead>
               <TableHead className="w-32 font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">Date</TableHead>
               <TableHead className="w-36 font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">Status</TableHead>
               <TableHead className="w-24 text-right font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-4">Action</TableHead>
@@ -106,12 +106,12 @@ export function MyReportsList({ reports }: MyReportsListProps) {
                     <span className="line-clamp-2">{report.title}</span>
                   </TableCell>
                   <TableCell className="py-5">
-                    <p className="text-muted-foreground text-xs leading-relaxed line-clamp-3 whitespace-normal break-words max-w-[280px]">
+                    <p className="text-muted-foreground text-xs leading-relaxed line-clamp-3 whitespace-normal wrap-break-word max-w-70">
                       {report.description}
                     </p>
                   </TableCell>
                   <TableCell className="py-5">
-                    <p className="text-muted-foreground italic text-xs leading-relaxed line-clamp-3 whitespace-normal break-words max-w-[280px]">
+                    <p className="text-muted-foreground italic text-xs leading-relaxed line-clamp-3 whitespace-normal wrap-break-word max-w-70">
                       {report.hiddenDetails || "-"}
                     </p>
                   </TableCell>
@@ -131,7 +131,7 @@ export function MyReportsList({ reports }: MyReportsListProps) {
                       <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-50 mt-0.5">
                         <MapPin className="h-3 w-3 text-red-600" />
                       </div>
-                      <span className="text-xs font-semibold text-foreground line-clamp-2 whitespace-normal max-w-[130px]">
+                      <span className="text-xs font-semibold text-foreground line-clamp-2 whitespace-normal max-w-32.5">
                         {report.location}
                       </span>
                     </div>
@@ -150,7 +150,7 @@ export function MyReportsList({ reports }: MyReportsListProps) {
                     <Badge 
                       variant={statusVariant as any}
                       className={cn(
-                        "text-[9px] font-black uppercase tracking-widest border px-2.5 py-1 text-center leading-tight whitespace-normal break-words w-full justify-center max-w-[120px]",
+                        "text-[9px] font-black uppercase tracking-widest border px-2.5 py-1 text-center leading-tight whitespace-normal wrap-break-word w-full justify-center max-w-30",
                         status === "CLAIMED" && "bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-200"
                       )}
                     >

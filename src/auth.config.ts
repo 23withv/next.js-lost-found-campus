@@ -1,8 +1,8 @@
 import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import { loginSchema } from "@/types/authSchema";
-import UserModel from "@/models/User"; 
+import { loginSchema } from "@/lib/validators/authSchema";
+import UserModel from "@/models/User";
 import connectDB from "@/lib/db";
 import bcrypt from "bcryptjs";
 
@@ -17,7 +17,6 @@ export default {
       async authorize(credentials) {
         const validatedFields = loginSchema.safeParse(credentials);
         if (validatedFields.success) {
-
           const { email, password } = validatedFields.data;
           await connectDB();
           const user = await UserModel.findOne({ email });
@@ -27,16 +26,16 @@ export default {
           const passwordsMatch = await bcrypt.compare(password, user.password);
           if (passwordsMatch) {
             return {
-              id: user._id.toString(), 
+              id: user._id.toString(),
               email: user.email,
               name: user.name,
-              role: user.role, 
+              role: user.role,
             };
           }
         }
         return null;
-      }
-    })
+      },
+    }),
   ],
   callbacks: {
     async jwt({ token, user }) {
@@ -52,6 +51,6 @@ export default {
         session.user.role = token.role as any;
       }
       return session;
-    }
-  }
+    },
+  },
 } satisfies NextAuthConfig;

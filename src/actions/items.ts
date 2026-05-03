@@ -3,13 +3,13 @@
 import { auth } from "@/auth";
 import { uploadImage } from "@/services/imageService";
 import { createItem } from "@/services/itemService";
-import { itemSchema } from "@/lib/validators/item";
+import { itemSchema } from "@/lib/validators/itemSchema";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function submitReport(prevState: any, formData: FormData) {
   const session = await auth();
-  
+
   if (!session?.user?.id) {
     return { error: "Authentication required. Please login." };
   }
@@ -38,7 +38,9 @@ export async function submitReport(prevState: any, formData: FormData) {
       type: itemType,
       category: formData.get("category"),
       location: formData.get("location"),
-      date: formData.get("date") ? new Date(formData.get("date") as string) : new Date(),
+      date: formData.get("date")
+        ? new Date(formData.get("date") as string)
+        : new Date(),
     };
 
     const validatedData = itemSchema.parse({
@@ -47,14 +49,13 @@ export async function submitReport(prevState: any, formData: FormData) {
     });
 
     await createItem(validatedData, session.user.id, imageUrls);
-    
+
     revalidatePath("/items");
     revalidatePath("/");
-    
   } catch (error: any) {
     if (error.name === "ZodError") return { error: error.errors[0].message };
     return { error: "Internal system error." };
   }
 
-  redirect("/items"); 
+  redirect("/items");
 }

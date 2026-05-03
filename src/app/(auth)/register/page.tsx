@@ -37,6 +37,6 @@ export default function RegisterPage() {
           </Link>
         </div>
       </CardContent>
-    </Card>
+  </Card>
   );
 }

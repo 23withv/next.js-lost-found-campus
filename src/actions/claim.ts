@@ -1,50 +1,52 @@
-"use server"
+"use server";
 
-import { auth } from "@/auth"
-import connectDB from "@/lib/db"
-import ClaimModel from "@/models/Claim"
-import ItemModel from "@/models/Item"
-import { claimSchema, ClaimFormValues } from "@/lib/validators/claim"
-import { revalidatePath } from "next/cache"
+import { auth } from "@/auth";
+import connectDB from "@/lib/db";
+import ClaimModel from "@/models/Claim";
+import ItemModel from "@/models/Item";
+import { claimSchema, ClaimFormValues } from "@/lib/validators/claimSchema";
+import { revalidatePath } from "next/cache";
 
 export async function submitClaim(itemId: string, data: ClaimFormValues) {
   try {
-    const session = await auth()
-    
+    const session = await auth();
+
     if (!session?.user) {
-      return { error: "Unauthorized access. Please log in." }
+      return { error: "Unauthorized access. Please log in." };
     }
 
     if (session.user.role !== "PELAPOR") {
-      return { error: "Forbidden. Only registered users can claim items." }
+      return { error: "Forbidden. Only registered users can claim items." };
     }
 
-    const validationResult = claimSchema.safeParse(data)
-    
+    const validationResult = claimSchema.safeParse(data);
+
     if (!validationResult.success) {
-      return { error: "Invalid form data provided." }
+      return { error: "Invalid form data provided." };
     }
 
-    await connectDB()
+    await connectDB();
 
-    const item = await ItemModel.findById(itemId)
-    
+    const item = await ItemModel.findById(itemId);
+
     if (!item) {
-      return { error: "Item not found." }
+      return { error: "Item not found." };
     }
 
     if (item.type !== "FOUND") {
-      return { error: "Only found items can be claimed." }
+      return { error: "Only found items can be claimed." };
     }
 
     const existingClaim = await ClaimModel.findOne({
       item: itemId,
       claimer: session.user.id,
-      status: { $in: ["PENDING", "VERIFIED"] }
-    })
+      status: { $in: ["PENDING", "VERIFIED"] },
+    });
 
     if (existingClaim) {
-      return { error: "You have already submitted an active claim for this item." }
+      return {
+        error: "You have already submitted an active claim for this item.",
+      };
     }
 
     await ClaimModel.create({
@@ -53,13 +55,17 @@ export async function submitClaim(itemId: string, data: ClaimFormValues) {
       status: "PENDING",
       proofDescription: validationResult.data.proofDescription,
       alternateContact: validationResult.data.alternateContact || null,
-    })
+    });
 
-    revalidatePath(`/items/${item.slug}`)
-    revalidatePath("/dashboard/claims")
+    revalidatePath(`/items/${item.slug}`);
+    revalidatePath("/dashboard/claims");
 
-    return { success: "Claim submitted successfully. Admin will review your proof." }
+    return {
+      success: "Claim submitted successfully. Admin will review your proof.",
+    };
   } catch (error) {
-    return { error: "An internal server error occurred while submitting the claim." }
+    return {
+      error: "An internal server error occurred while submitting the claim.",
+    };
   }
 }

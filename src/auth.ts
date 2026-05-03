@@ -18,14 +18,14 @@ export const {
     Credentials({
       async authorize(credentials) {
         await connectDB();
+        
+        const emailStr = credentials.email as string;
+        const passwordStr = credentials.password as string;
 
-        const user = await UserModel.findOne({ email: credentials.email });
+        const user = await UserModel.findOne({ email: emailStr });
         if (!user || !user.password) return null;
 
-        const passwordMatch = await bcrypt.compare(
-          credentials.password as string,
-          user.password
-        );
+        const passwordMatch = await bcrypt.compare(passwordStr, user.password);
 
         if (passwordMatch) {
           return {
@@ -61,13 +61,16 @@ export const {
     async signIn({ user, account }) {
       if (account?.provider === "google") {
         await connectDB();
+        
+        if (!user.email) return false; 
+        
         const existingUser = await UserModel.findOne({ email: user.email });
 
         if (!existingUser) {
           const newUser = await UserModel.create({
-            name: user.name,
+            name: user.name || "Google User", 
             email: user.email,
-            image: user.image,
+            image: user.image || null,
             role: "PELAPOR",
           });
           user.role = newUser.role;

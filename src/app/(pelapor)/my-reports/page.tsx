@@ -2,7 +2,6 @@ import { auth } from "@/auth";
 import { getReportsByUserId } from "@/services/itemService";
 import { MyReportsList } from "@/components/pelapor/my-reports-list";
 import { redirect } from "next/navigation";
-import { FileText } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -16,20 +15,21 @@ export default async function MyReportsPage() {
   const reports = await getReportsByUserId(session.user.id);
 
   return (
-    <div className="min-h-screen">
-      <div className="mb-10 flex flex-col gap-2">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-1 rounded-full bg-red-600" />
-          <h1 className="text-4xl font-black tracking-tighter text-foreground uppercase italic">
+    <div className="min-h-screen pb-12">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-10 border-l-4 border-red-600 pl-5 md:pl-6">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground uppercase">
             My Reporting History
           </h1>
+          <p className="mt-2 text-lg text-muted-foreground font-medium leading-relaxed">
+            Manage and track all items you have contributed to the campus network.
+          </p>
         </div>
-        <p className="text-muted-foreground font-medium">
-          Manage and track all items you have contributed to the campus network.
-        </p>
-      </div>
 
-      <MyReportsList reports={reports} />
+        <div className="pt-6 md:pt-8 lg:pt-10">
+          <MyReportsList reports={reports} />
+        </div>
+      </div>
     </div>
   );
 }

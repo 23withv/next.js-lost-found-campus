@@ -3,6 +3,7 @@
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 
+// Server action utk login via Email/Password.
 export async function loginAction(prevState: string | undefined, formData: FormData) {
   try {
     await signIn("credentials", {
@@ -22,6 +23,7 @@ export async function loginAction(prevState: string | undefined, formData: FormD
   }
 }
 
+// Action Google OAuth
 export async function googleLoginAction() {
     await signIn("google", { redirectTo: "/" });
 }

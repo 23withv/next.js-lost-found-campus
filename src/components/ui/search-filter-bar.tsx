@@ -52,14 +52,19 @@ export function SearchFilterBar({
         </div>
       )}
 
-      <div className="relative w-full md:w-80 h-10">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/70 pointer-events-none z-10" />
-        <Input
-          placeholder={searchPlaceholder}
-          className="pl-11 h-full border-0 bg-muted/50 focus-visible:bg-background focus-visible:ring-1 focus-visible:ring-red-500 w-full transition-colors"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+      <div className="relative w-full md:w-80 lg:w-96">
+        <div className="flex items-center rounded-md border border-input bg-muted/50 px-3 py-1.5 transition-colors focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500">
+          <Search className="h-4 w-4 shrink-0 text-muted-foreground mr-3" /> 
+          <Input
+            placeholder={searchPlaceholder}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className={cn(
+              "border-0 bg-transparent p-0 focus-visible:ring-0 focus-visible:ring-offset-0", 
+              "placeholder:text-muted-foreground text-sm"
+            )}
+          />
+        </div>
       </div>
     </div>
   )
