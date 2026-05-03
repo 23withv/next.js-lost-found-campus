@@ -70,5 +70,3 @@ pnpm dev
 ```
 
 Once the server compiles successfully, navigate to `http://localhost:3000` in your browser to interact with the application.
-
-```
